@@ -28,10 +28,8 @@ public class CustomerServiceImplTest {
   @BeforeEach
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
-    customerService = new CustomerServiceImpl();
-    customerService.setCustomerMapper(customerMapper);
-    customerService.setCustomerRepository(customerRepository);
-    // customerService = new CustomerServiceImpl(customerMapper, customerRepository);
+
+    customerService = new CustomerServiceImpl(customerMapper, customerRepository);
   }
 
   @Test
@@ -83,7 +81,7 @@ public class CustomerServiceImplTest {
     Customer savedCustomer = new Customer();
     savedCustomer.setFirstName(customerDTO.getFirstName());
     savedCustomer.setLastName(customerDTO.getLastName());
-    savedCustomer.setId(1l);
+    savedCustomer.setId(1L);
 
     when(customerRepository.save(any(Customer.class))).thenReturn(savedCustomer);
 

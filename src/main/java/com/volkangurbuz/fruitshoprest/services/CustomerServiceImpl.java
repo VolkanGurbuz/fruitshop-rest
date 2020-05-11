@@ -14,16 +14,11 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-  private CustomerMapper customerMapper;
-  private CustomerRepository customerRepository;
+  private final CustomerMapper customerMapper;
+  private final CustomerRepository customerRepository;
 
-  @Autowired
-  public void setCustomerMapper(CustomerMapper customerMapper) {
+  public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepository customerRepository) {
     this.customerMapper = customerMapper;
-  }
-
-  @Autowired
-  public void setCustomerRepository(CustomerRepository customerRepository) {
     this.customerRepository = customerRepository;
   }
 
@@ -33,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
         .map(
             customer -> {
               CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
-              customerDTO.setCustomerUrl("/api/v1/customers/" + customer.getId());
+              customerDTO.setCustomerUrl("/api/v1/customer/" + customer.getId());
               return customerDTO;
             })
         .collect(Collectors.toList());
@@ -45,6 +40,12 @@ public class CustomerServiceImpl implements CustomerService {
     return customerRepository
         .findById(id)
         .map(customerMapper::customerToCustomerDTO)
+        .map(
+            customerDTO -> {
+              // set API URL
+              customerDTO.setCustomerUrl("/api/v1/customer/" + id);
+              return customerDTO;
+            })
         .orElseThrow(RuntimeException::new); // todo implement better exception handling
   }
 
@@ -54,21 +55,40 @@ public class CustomerServiceImpl implements CustomerService {
     return saveAndReturnDTO(customerMapper.customerDTOToCustomer(customerDTO));
   }
 
+  private CustomerDTO saveAndReturnDTO(Customer customer) {
+    Customer savedCustomer = customerRepository.save(customer);
+
+    CustomerDTO returnDto = customerMapper.customerToCustomerDTO(savedCustomer);
+
+    returnDto.setCustomerUrl("/api/v1/customer/" + savedCustomer.getId());
+
+    return returnDto;
+  }
+
   @Override
   public CustomerDTO saveCustomerByDTO(Long id, CustomerDTO customerDTO) {
-
     Customer customer = customerMapper.customerDTOToCustomer(customerDTO);
     customer.setId(id);
 
     return saveAndReturnDTO(customer);
   }
 
-  private CustomerDTO saveAndReturnDTO(Customer customer) {
+  @Override
+  public CustomerDTO patchCustomer(Long id, CustomerDTO customerDTO) {
+    return customerRepository
+        .findById(id)
+        .map(
+            customer -> {
+              if (customerDTO.getFirstName() != null) {
+                customer.setFirstName(customerDTO.getFirstName());
+              }
 
-    Customer savedCustomer = customerRepository.save(customer);
-    CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(savedCustomer);
+              if (customerDTO.getLastName() != null) {
+                customer.setLastName(customerDTO.getLastName());
+              }
 
-    customerDTO.setCustomerUrl("/api/v1/customer" + savedCustomer.getId());
-    return customerDTO;
+              return customerMapper.customerToCustomerDTO(customerRepository.save(customer));
+            })
+        .orElseThrow(RuntimeException::new); // todo implement better exception handling;
   }
 }
