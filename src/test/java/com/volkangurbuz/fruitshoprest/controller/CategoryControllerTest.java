@@ -32,7 +32,7 @@ public class CategoryControllerTest {
   public static final String NAME = "Jim";
 
   @Mock CategoryService categoryService;
-  // going to do is autimatically inject that category service into the contnroller
+  // going to do is automatically inject that category service into the contnroller
   @InjectMocks CategoryController categoryController;
 
   MockMvc mockMvc;

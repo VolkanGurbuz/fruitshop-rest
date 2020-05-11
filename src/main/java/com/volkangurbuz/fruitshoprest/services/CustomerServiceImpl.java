@@ -5,12 +5,14 @@ import com.volkangurbuz.fruitshoprest.api.v1.model.CategoryDTO;
 import com.volkangurbuz.fruitshoprest.api.v1.model.CustomerDTO;
 import com.volkangurbuz.fruitshoprest.domain.Customer;
 import com.volkangurbuz.fruitshoprest.repositories.CustomerRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -94,5 +96,14 @@ public class CustomerServiceImpl implements CustomerService {
               return returnCustomer;
             })
         .orElseThrow(RuntimeException::new); // todo implement better exception handling;
+  }
+
+  @Override
+  public void deleteCustomerByID(Long id) {
+    try {
+      customerRepository.deleteById(id);
+    } catch (Exception e) {
+      System.err.println("please check id: " + id);
+    }
   }
 }
