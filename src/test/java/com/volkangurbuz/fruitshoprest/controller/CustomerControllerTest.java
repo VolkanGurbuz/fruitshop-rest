@@ -14,11 +14,13 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
+import static com.volkangurbuz.fruitshoprest.controller.AbstractRestControllerTest.asJsonString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -74,5 +76,27 @@ public class CustomerControllerTest {
         .perform(get("/api/v1/customers/1").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.firstName", equalTo("Michale")));
+  }
+
+  @Test
+  public void createNewCustomer() throws Exception {
+    // given
+    CustomerDTO customer = new CustomerDTO();
+    customer.setFirstName("Fred");
+    customer.setLastName("Flintstone");
+
+    CustomerDTO returnDTO = new CustomerDTO();
+    returnDTO.setFirstName(customer.getFirstName());
+    returnDTO.setLastName(customer.getLastName());
+
+    when(customerService.createNewCustomer(customer)).thenReturn(returnDTO);
+
+    mockMvc
+        .perform(
+            post(CustomerController.BASE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(customer)))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.firstName", equalTo("Fred")));
   }
 }
