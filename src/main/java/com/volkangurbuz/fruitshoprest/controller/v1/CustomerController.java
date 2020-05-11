@@ -11,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/api/v1/customers")
+@RestController
+@RequestMapping(CustomerController.BASE_URL)
 public class CustomerController {
 
   public static final String BASE_URL = "/api/v1/customers";
@@ -23,10 +23,9 @@ public class CustomerController {
   }
 
   @GetMapping
-  public ResponseEntity<CustomerListDTO> getAllCustomers() {
+  public CustomerListDTO getAllCustomers() {
 
-    return new ResponseEntity<CustomerListDTO>(
-        new CustomerListDTO(customerService.getAllCustomers()), HttpStatus.OK);
+    return new CustomerListDTO(customerService.getAllCustomers());
   }
 
   @GetMapping("/{id}")
@@ -36,30 +35,26 @@ public class CustomerController {
   }
 
   @PostMapping
-  public ResponseEntity<CustomerDTO> createNewCustomer(@RequestBody CustomerDTO customerDTO) {
-    return new ResponseEntity<CustomerDTO>(
-        customerService.createNewCustomer(customerDTO), HttpStatus.CREATED);
+  @ResponseStatus(HttpStatus.CREATED)
+  public CustomerDTO createNewCustomer(@RequestBody CustomerDTO customerDTO) {
+    return customerService.createNewCustomer(customerDTO);
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<CustomerDTO> updateCustomer(
-      @PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
-    return new ResponseEntity<CustomerDTO>(
-        customerService.saveCustomerByDTO(id, customerDTO), HttpStatus.OK);
+  @PutMapping({"/{id}"})
+  @ResponseStatus(HttpStatus.OK)
+  public CustomerDTO updateCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
+    return customerService.saveCustomerByDTO(id, customerDTO);
   }
 
-  @PatchMapping("/{id}")
-  public ResponseEntity<CustomerDTO> patchCustomer(
-      @PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
-
-    return new ResponseEntity<CustomerDTO>(
-        customerService.patchCustomer(id, customerDTO), HttpStatus.OK);
+  @PatchMapping({"/{id}"})
+  @ResponseStatus(HttpStatus.OK)
+  public CustomerDTO patchCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
+    return customerService.patchCustomer(id, customerDTO);
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
-
+  @DeleteMapping({"/{id}"})
+  @ResponseStatus(HttpStatus.OK)
+  public void deleteCustomer(@PathVariable Long id) {
     customerService.deleteCustomerByID(id);
-    return new ResponseEntity<Void>(HttpStatus.OK);
   }
 }
