@@ -6,6 +6,7 @@ import com.volkangurbuz.fruitshoprest.bootstrap.Bootstrap;
 import com.volkangurbuz.fruitshoprest.domain.Customer;
 import com.volkangurbuz.fruitshoprest.repositories.CategoryRepository;
 import com.volkangurbuz.fruitshoprest.repositories.CustomerRepository;
+import com.volkangurbuz.fruitshoprest.repositories.VendorRepository;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ public class CustomerServiceImplIT {
   @Autowired CustomerRepository customerRepository;
 
   @Autowired CategoryRepository categoryRepository;
-
+  @Autowired VendorRepository vendorRepository;
   CustomerService customerService;
 
   public void setUp() throws Exception {
@@ -36,7 +37,7 @@ public class CustomerServiceImplIT {
     System.out.println(customerRepository.findAll().size());
 
     // setup data for testing
-    Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository);
+    Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository, vendorRepository);
     bootstrap.run(); // load data
 
     customerService = new CustomerServiceImpl(CustomerMapper.INSTANCE, customerRepository);

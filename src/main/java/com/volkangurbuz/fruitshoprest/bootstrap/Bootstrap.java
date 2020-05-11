@@ -2,8 +2,10 @@ package com.volkangurbuz.fruitshoprest.bootstrap;
 
 import com.volkangurbuz.fruitshoprest.domain.Category;
 import com.volkangurbuz.fruitshoprest.domain.Customer;
+import com.volkangurbuz.fruitshoprest.domain.Vendor;
 import com.volkangurbuz.fruitshoprest.repositories.CategoryRepository;
 import com.volkangurbuz.fruitshoprest.repositories.CustomerRepository;
+import com.volkangurbuz.fruitshoprest.repositories.VendorRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -11,12 +13,17 @@ import org.springframework.stereotype.Component;
 // use spring events before with commandLineRunner
 public class Bootstrap implements CommandLineRunner {
 
-  private CategoryRepository categoryRepository;
-  private CustomerRepository customerRepository;
+  private final CategoryRepository categoryRepository;
+  private final CustomerRepository customerRepository;
+  private final VendorRepository vendorRepository;
 
-  public Bootstrap(CategoryRepository categoryRepository, CustomerRepository customerRepository) {
-    this.categoryRepository = categoryRepository;
+  public Bootstrap(
+      CategoryRepository categoryRespository,
+      CustomerRepository customerRepository,
+      VendorRepository vendorRepository) {
+    this.categoryRepository = categoryRespository;
     this.customerRepository = customerRepository;
+    this.vendorRepository = vendorRepository;
   }
 
   @Override
@@ -24,6 +31,7 @@ public class Bootstrap implements CommandLineRunner {
 
     loadCustomers();
     loadCategories();
+    loadVendors();
   }
 
   public void loadCustomers() {
@@ -64,5 +72,15 @@ public class Bootstrap implements CommandLineRunner {
     categoryRepository.save(exotic);
     categoryRepository.save(nuts);
     System.out.println("date loaded - " + categoryRepository.count());
+  }
+
+  private void loadVendors() {
+    Vendor vendor1 = new Vendor();
+    vendor1.setName("Vendor 1");
+    vendorRepository.save(vendor1);
+
+    Vendor vendor2 = new Vendor();
+    vendor2.setName("Vendor 2");
+    vendorRepository.save(vendor2);
   }
 }
