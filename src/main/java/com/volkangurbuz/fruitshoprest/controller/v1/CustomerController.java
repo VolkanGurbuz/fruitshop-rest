@@ -6,6 +6,8 @@ import com.volkangurbuz.fruitshoprest.api.v1.model.CustomerDTO;
 import com.volkangurbuz.fruitshoprest.api.v1.model.CustomerListDTO;
 import com.volkangurbuz.fruitshoprest.domain.Customer;
 import com.volkangurbuz.fruitshoprest.services.CustomerService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,9 @@ public class CustomerController {
     this.customerService = customerService;
   }
 
+  @ApiOperation(
+      value = "This will get a list of customers",
+      notes = "there are some notes about the api")
   @GetMapping
   public CustomerListDTO getAllCustomers() {
 
