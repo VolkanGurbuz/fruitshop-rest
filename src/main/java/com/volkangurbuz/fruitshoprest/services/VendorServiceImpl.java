@@ -6,10 +6,12 @@ import com.volkangurbuz.fruitshoprest.api.v1.model.VendorDTOList;
 import com.volkangurbuz.fruitshoprest.controller.v1.VendorController;
 import com.volkangurbuz.fruitshoprest.domain.Vendor;
 import com.volkangurbuz.fruitshoprest.repositories.VendorRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class VendorServiceImpl implements VendorService {
 
   private final VendorRepository vendorRepository;

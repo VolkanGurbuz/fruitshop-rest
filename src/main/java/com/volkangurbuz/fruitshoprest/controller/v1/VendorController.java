@@ -3,6 +3,7 @@ package com.volkangurbuz.fruitshoprest.controller.v1;
 import com.volkangurbuz.fruitshoprest.api.v1.model.VendorDTO;
 import com.volkangurbuz.fruitshoprest.api.v1.model.VendorDTOList;
 import com.volkangurbuz.fruitshoprest.services.VendorService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,9 @@ public class VendorController {
     this.vendorService = vendorService;
   }
 
+  @ApiOperation(
+      value = "This will get a list of vendors",
+      notes = "there are some notes about the api")
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public VendorDTOList getVendorList() {
