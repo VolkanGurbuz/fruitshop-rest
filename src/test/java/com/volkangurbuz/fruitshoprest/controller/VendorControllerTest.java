@@ -55,9 +55,11 @@ public class VendorControllerTest {
     given(vendorService.getAllVendors()).willReturn(vendorListDTO);
 
     mockMvc
-        .perform(get(VendorController.BASE_URL).contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.vendors", hasSize(2)));
+        .perform(
+            get(VendorController.BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
   }
 
   @Test
